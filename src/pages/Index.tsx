@@ -1,12 +1,8 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { EisenhowerMatrix } from "@/components/EisenhowerMatrix";
 import { TimeAnalysisChart } from "@/components/TimeAnalysisChart";
-import { PremiumCTA } from "@/components/PremiumCTA";
-import { toast } from "@/components/ui/sonner";
-import { ArrowDownToLine, CalendarCheck, CloudUpload } from "lucide-react";
 
 const Index = () => {
   const [taskStats, setTaskStats] = useState({
@@ -44,8 +40,6 @@ const Index = () => {
                 <TimeAnalysisChart taskStats={taskStats} />
               </CardContent>
             </Card>
-
-            <PremiumCTA />
           </div>
         </div>
       </main>

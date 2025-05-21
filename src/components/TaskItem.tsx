@@ -1,8 +1,8 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, Edit, Check } from "lucide-react";
+import { Trash2, Edit, Check, Clock } from "lucide-react";
 import { TaskForm } from "./TaskForm";
 
 type Task = {
@@ -26,6 +26,25 @@ export const TaskItem = ({ task, onUpdate, onDelete, color }: TaskItemProps) => 
   const [timerActive, setTimerActive] = useState(false);
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
 
+  // Efeito para controlar o timer baseado no status da tarefa
+  useEffect(() => {
+    // Se o status é "in_progress", inicie o timer automaticamente
+    if (task.status === "in_progress" && !timerActive) {
+      startTimer();
+    } 
+    // Se o status mudou para "completed" ou "pending", pare o timer
+    else if ((task.status === "completed" || task.status === "pending") && timerActive) {
+      stopTimer();
+    }
+    
+    // Limpeza ao desmontar o componente
+    return () => {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+    };
+  }, [task.status]);
+
   const getStatusBadge = () => {
     switch (task.status) {
       case "completed":
@@ -46,10 +65,6 @@ export const TaskItem = ({ task, onUpdate, onDelete, color }: TaskItemProps) => 
         break;
       case "in_progress":
         newStatus = "completed";
-        // Parar timer se estiver ativo quando concluir a tarefa
-        if (timerActive) {
-          stopTimer();
-        }
         break;
       case "completed":
         newStatus = "pending";
@@ -132,7 +147,10 @@ export const TaskItem = ({ task, onUpdate, onDelete, color }: TaskItemProps) => 
         <div className="flex justify-between items-center text-xs text-slate-500">
           <div className="flex flex-col xs:flex-row xs:gap-2">
             <span>Estimado: {formatTime(task.timeEstimated)}</span>
-            <span>Realizado: {formatTime(task.timeSpent)}</span>
+            <span className="flex items-center">
+              Realizado: {formatTime(task.timeSpent)}
+              {timerActive && <Clock size={12} className="ml-1 animate-pulse text-blue-500" />}
+            </span>
           </div>
           
           <div className="flex gap-1">
