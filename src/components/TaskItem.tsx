@@ -4,6 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash2, Edit, Check, Clock } from "lucide-react";
 import { TaskForm } from "./TaskForm";
+import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type Task = {
   id: string;
@@ -48,32 +50,52 @@ export const TaskItem = ({ task, onUpdate, onDelete, color }: TaskItemProps) => 
   const getStatusBadge = () => {
     switch (task.status) {
       case "completed":
-        return <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Concluído</span>;
+        return (
+          <Badge className="bg-green-500 hover:bg-green-600">
+            Concluído
+          </Badge>
+        );
       case "in_progress":
-        return <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Em andamento</span>;
+        return (
+          <Badge className="bg-blue-500 hover:bg-blue-600">
+            Em andamento
+          </Badge>
+        );
       default:
-        return <span className="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">Pendente</span>;
+        return (
+          <Badge variant="outline" className="text-slate-700 border-slate-300">
+            Pendente
+          </Badge>
+        );
+    }
+  };
+
+  const getNextStatus = (currentStatus: "pending" | "in_progress" | "completed") => {
+    switch (currentStatus) {
+      case "pending":
+        return "in_progress";
+      case "in_progress":
+        return "completed";
+      case "completed":
+        return "pending";
     }
   };
 
   const toggleStatus = () => {
-    let newStatus: "pending" | "in_progress" | "completed";
-    
-    switch (task.status) {
-      case "pending":
-        newStatus = "in_progress";
-        break;
-      case "in_progress":
-        newStatus = "completed";
-        break;
-      case "completed":
-        newStatus = "pending";
-        break;
-      default:
-        newStatus = "pending";
-    }
-    
+    const newStatus = getNextStatus(task.status);
     onUpdate({ status: newStatus });
+  };
+
+  const getStatusTooltipText = () => {
+    const nextStatus = getNextStatus(task.status);
+    switch (nextStatus) {
+      case "in_progress":
+        return "Iniciar tarefa";
+      case "completed":
+        return "Marcar como concluída";
+      case "pending":
+        return "Voltar para pendente";
+    }
   };
 
   const handleEdit = () => {
@@ -130,13 +152,26 @@ export const TaskItem = ({ task, onUpdate, onDelete, color }: TaskItemProps) => 
       <CardContent className="p-3">
         <div className="flex justify-between items-start gap-2 mb-2">
           <div className="flex items-center gap-2">
-            <button 
-              onClick={toggleStatus} 
-              className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors
-                ${task.status === 'completed' ? `${color.replace('text-', 'bg-')} text-white` : 'border border-slate-300'}`}
-            >
-              {task.status === 'completed' && <Check size={12} />}
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button 
+                  onClick={toggleStatus} 
+                  className={`w-6 h-6 rounded-full flex items-center justify-center transition-all
+                    ${task.status === 'completed' ? 
+                      `${color.replace('text-', 'bg-')} text-white` : 
+                      task.status === 'in_progress' ? 
+                        'bg-blue-100 border border-blue-400' : 
+                        'border border-slate-300 hover:border-slate-400 hover:bg-slate-50'}`}
+                  aria-label={`Marcar como ${getNextStatus(task.status)}`}
+                >
+                  {task.status === 'completed' && <Check size={14} />}
+                  {task.status === 'in_progress' && <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                {getStatusTooltipText()}
+              </TooltipContent>
+            </Tooltip>
             <h4 className={`text-sm font-medium ${task.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-700'}`}>
               {task.title}
             </h4>
@@ -154,33 +189,51 @@ export const TaskItem = ({ task, onUpdate, onDelete, color }: TaskItemProps) => 
           </div>
           
           <div className="flex gap-1">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-6 w-6 p-0" 
-              onClick={handleEdit}
-            >
-              <Edit size={14} />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50" 
-              onClick={onDelete}
-            >
-              <Trash2 size={14} />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-6 w-6 p-0" 
+                  onClick={handleEdit}
+                >
+                  <Edit size={14} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Editar tarefa</TooltipContent>
+            </Tooltip>
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50" 
+                  onClick={onDelete}
+                >
+                  <Trash2 size={14} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Excluir tarefa</TooltipContent>
+            </Tooltip>
           </div>
         </div>
         
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className={`mt-2 text-xs ${timerActive ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}`}
-          onClick={toggleTimer}
-        >
-          {timerActive ? 'Pausar Timer' : 'Iniciar Timer'}
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className={`mt-2 text-xs ${timerActive ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}`}
+              onClick={toggleTimer}
+            >
+              {timerActive ? 'Pausar Timer' : 'Iniciar Timer'}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            {timerActive ? 'Pausar o cronômetro' : 'Iniciar o cronômetro para esta tarefa'}
+          </TooltipContent>
+        </Tooltip>
       </CardContent>
     </Card>
   );

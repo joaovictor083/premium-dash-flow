@@ -140,23 +140,7 @@ export const TimeAnalysisChart = ({ taskStats }: TimeAnalysisChartProps) => {
         )}
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-        {data.map((item, index) => (
-          <div key={index} className="flex flex-col">
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-              <span className="font-medium">{item.name}</span>
-            </div>
-            {chartView === "time" ? (
-              <span className="text-slate-500">{formatTime(item.value)}</span>
-            ) : (
-              <span className="text-slate-500">
-                {item.value} de {(item as TaskChartData).total} concluídas
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
+      {/* Removemos a lista duplicada de itens abaixo do gráfico, já que o Legend do Recharts já exibe essa informação */}
     </div>
   );
 };
