@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { EisenhowerMatrix } from "@/components/EisenhowerMatrix";
 import { TimeAnalysisChart } from "@/components/TimeAnalysisChart";
+import { PremiumFeatures } from "@/components/PremiumFeatures";
 
 const Index = () => {
   const [taskStats, setTaskStats] = useState({
@@ -40,6 +41,8 @@ const Index = () => {
                 <TimeAnalysisChart taskStats={taskStats} />
               </CardContent>
             </Card>
+
+            <PremiumFeatures />
           </div>
         </div>
       </main>
