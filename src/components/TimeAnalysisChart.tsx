@@ -18,11 +18,30 @@ interface TimeAnalysisChartProps {
   };
 }
 
+interface TimeChartData {
+  name: string;
+  value: number;
+  color: string;
+}
+
+interface TaskChartData {
+  name: string;
+  value: number;
+  total: number;
+  color: string;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  chartView: "time" | "tasks";
+}
+
 export const TimeAnalysisChart = ({ taskStats }: TimeAnalysisChartProps) => {
   const [chartView, setChartView] = useState<"time" | "tasks">("time");
   
   // Configuração para visualização de tempo gasto
-  const timeData = [
+  const timeData: TimeChartData[] = [
     { name: "Importante e Urgente", value: taskStats.urgent_important.timeSpent, color: "#EF4444" },
     { name: "Importante, Não Urgente", value: taskStats.not_urgent_important.timeSpent, color: "#3B82F6" },
     { name: "Urgente, Não Importante", value: taskStats.urgent_not_important.timeSpent, color: "#F59E0B" },
@@ -30,7 +49,7 @@ export const TimeAnalysisChart = ({ taskStats }: TimeAnalysisChartProps) => {
   ];
 
   // Configuração para visualização de tarefas concluídas
-  const tasksData = [
+  const tasksData: TaskChartData[] = [
     { name: "Importante e Urgente", value: taskStats.urgent_important.completed, total: taskStats.urgent_important.total, color: "#EF4444" },
     { name: "Importante, Não Urgente", value: taskStats.not_urgent_important.completed, total: taskStats.not_urgent_important.total, color: "#3B82F6" },
     { name: "Urgente, Não Importante", value: taskStats.urgent_not_important.completed, total: taskStats.urgent_not_important.total, color: "#F59E0B" },
@@ -131,7 +150,9 @@ export const TimeAnalysisChart = ({ taskStats }: TimeAnalysisChartProps) => {
             {chartView === "time" ? (
               <span className="text-slate-500">{formatTime(item.value)}</span>
             ) : (
-              <span className="text-slate-500">{item.value} de {item.total} concluídas</span>
+              <span className="text-slate-500">
+                {item.value} de {(item as TaskChartData).total} concluídas
+              </span>
             )}
           </div>
         ))}
@@ -141,7 +162,7 @@ export const TimeAnalysisChart = ({ taskStats }: TimeAnalysisChartProps) => {
 };
 
 // Componente personalizado para o tooltip do gráfico
-const CustomTooltip = ({ active, payload, chartView }) => {
+const CustomTooltip = ({ active, payload, chartView }: CustomTooltipProps) => {
   if (!active || !payload || !payload.length) {
     return null;
   }

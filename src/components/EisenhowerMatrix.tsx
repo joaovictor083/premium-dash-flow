@@ -76,54 +76,86 @@ export const EisenhowerMatrix = ({ onStatsUpdate }: EisenhowerMatrixProps) => {
     const storedTasks = localStorage.getItem('eisenhowerTasks');
     
     if (storedTasks) {
-      setTasks(JSON.parse(storedTasks));
+      try {
+        const parsedTasks = JSON.parse(storedTasks);
+        // Garantir que a tipagem esteja correta
+        const typedTasks: Record<QuadrantId, Task[]> = {
+          urgent_important: [],
+          not_urgent_important: [],
+          urgent_not_important: [],
+          not_urgent_not_important: []
+        };
+        
+        // Converter e validar o status para cada tarefa
+        Object.keys(parsedTasks).forEach((quadrantId) => {
+          const quadId = quadrantId as QuadrantId;
+          typedTasks[quadId] = parsedTasks[quadId].map((task: any) => ({
+            ...task,
+            // Garantir que o status seja um dos valores permitidos
+            status: ["pending", "in_progress", "completed"].includes(task.status) 
+              ? task.status as "pending" | "in_progress" | "completed" 
+              : "pending",
+            // Garantir que a data seja um objeto Date
+            createdAt: new Date(task.createdAt)
+          }));
+        });
+        
+        setTasks(typedTasks);
+      } catch (error) {
+        console.error("Erro ao carregar tarefas:", error);
+        setDefaultTasks();
+      }
     } else {
-      // Dados de exemplo para demonstração inicial
-      const exampleTasks = {
-        urgent_important: [
-          { 
-            id: '1', 
-            title: 'Finalizar relatório para reunião', 
-            status: 'in_progress', 
-            timeEstimated: 60, 
-            timeSpent: 30, 
-            createdAt: new Date() 
-          }
-        ],
-        not_urgent_important: [
-          { 
-            id: '2', 
-            title: 'Planejar estratégia trimestral', 
-            status: 'pending', 
-            timeEstimated: 120, 
-            timeSpent: 0, 
-            createdAt: new Date() 
-          }
-        ],
-        urgent_not_important: [
-          { 
-            id: '3', 
-            title: 'Responder emails não críticos', 
-            status: 'pending', 
-            timeEstimated: 45, 
-            timeSpent: 0, 
-            createdAt: new Date() 
-          }
-        ],
-        not_urgent_not_important: [
-          { 
-            id: '4', 
-            title: 'Organizar mesa de trabalho', 
-            status: 'completed', 
-            timeEstimated: 30, 
-            timeSpent: 20, 
-            createdAt: new Date() 
-          }
-        ]
-      };
-      setTasks(exampleTasks);
+      setDefaultTasks();
     }
   }, []);
+
+  const setDefaultTasks = () => {
+    // Dados de exemplo para demonstração inicial
+    const exampleTasks: Record<QuadrantId, Task[]> = {
+      urgent_important: [
+        { 
+          id: '1', 
+          title: 'Finalizar relatório para reunião', 
+          status: 'in_progress', 
+          timeEstimated: 60, 
+          timeSpent: 30, 
+          createdAt: new Date() 
+        }
+      ],
+      not_urgent_important: [
+        { 
+          id: '2', 
+          title: 'Planejar estratégia trimestral', 
+          status: 'pending', 
+          timeEstimated: 120, 
+          timeSpent: 0, 
+          createdAt: new Date() 
+        }
+      ],
+      urgent_not_important: [
+        { 
+          id: '3', 
+          title: 'Responder emails não críticos', 
+          status: 'pending', 
+          timeEstimated: 45, 
+          timeSpent: 0, 
+          createdAt: new Date() 
+        }
+      ],
+      not_urgent_not_important: [
+        { 
+          id: '4', 
+          title: 'Organizar mesa de trabalho', 
+          status: 'completed', 
+          timeEstimated: 30, 
+          timeSpent: 20, 
+          createdAt: new Date() 
+        }
+      ]
+    };
+    setTasks(exampleTasks);
+  };
 
   // Salvar tarefas no localStorage quando houver alterações
   useEffect(() => {
