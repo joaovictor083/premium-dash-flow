@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, Edit, Check, Clock } from "lucide-react";
+import { Trash2, Edit, Check, Clock, ChevronDown } from "lucide-react";
 import { TaskForm } from "./TaskForm";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 type Task = {
   id: string;
@@ -137,6 +139,10 @@ export const TaskItem = ({ task, onUpdate, onDelete, color }: TaskItemProps) => 
     return `${hours}h ${mins}m`;
   };
 
+  const handleStatusChange = (newStatus: "pending" | "in_progress" | "completed") => {
+    onUpdate({ status: newStatus });
+  };
+
   if (isEditing) {
     return (
       <TaskForm 
@@ -176,7 +182,48 @@ export const TaskItem = ({ task, onUpdate, onDelete, color }: TaskItemProps) => 
               {task.title}
             </h4>
           </div>
-          {getStatusBadge()}
+          
+          {/* Dropdown interativo para alterar status */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-6 px-2 py-0">
+                {getStatusBadge()}
+                <ChevronDown size={12} className="ml-1" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem 
+                onClick={() => handleStatusChange("pending")}
+                className="flex items-center gap-2"
+              >
+                <Checkbox 
+                  checked={task.status === "pending"} 
+                  className="w-4 h-4"
+                />
+                <span>Pendente</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => handleStatusChange("in_progress")}
+                className="flex items-center gap-2"
+              >
+                <Checkbox 
+                  checked={task.status === "in_progress"} 
+                  className="w-4 h-4"
+                />
+                <span>Em andamento</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => handleStatusChange("completed")}
+                className="flex items-center gap-2"
+              >
+                <Checkbox 
+                  checked={task.status === "completed"} 
+                  className="w-4 h-4"
+                />
+                <span>Concluído</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="flex justify-between items-center text-xs text-slate-500">

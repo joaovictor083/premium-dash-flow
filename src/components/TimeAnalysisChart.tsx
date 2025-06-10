@@ -140,7 +140,37 @@ export const TimeAnalysisChart = ({ taskStats }: TimeAnalysisChartProps) => {
         )}
       </div>
 
-      {/* Removemos a lista duplicada de itens abaixo do gráfico, já que o Legend do Recharts já exibe essa informação */}
+      {/* Detalhes interativos baseados na visualização selecionada */}
+      <div className="mt-4 space-y-2">
+        <h3 className="text-sm font-medium text-slate-700">
+          {chartView === "time" ? "Tempo gasto por categoria:" : "Status das tarefas:"}
+        </h3>
+        
+        {data.map((item, index) => (
+          <div key={index} className="flex items-center justify-between text-xs text-slate-600 bg-slate-50 p-2 rounded">
+            <div className="flex items-center gap-2">
+              <div 
+                className="w-3 h-3 rounded-full" 
+                style={{ backgroundColor: item.color }}
+              ></div>
+              <span>{item.name}</span>
+            </div>
+            
+            {chartView === "time" ? (
+              <span className="font-medium">{formatTime(item.value)}</span>
+            ) : (
+              <div className="text-right">
+                <div className="font-medium">
+                  {item.value} de {(item as TaskChartData).total} concluídas
+                </div>
+                <div className="text-slate-500">
+                  {(item as TaskChartData).total - item.value} pendentes
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -160,12 +190,18 @@ const CustomTooltip = ({ active, payload, chartView }: CustomTooltipProps) => {
   };
 
   return (
-    <div className="bg-white p-2 border border-slate-200 rounded-md shadow-md">
-      <p className="font-medium text-xs">{data.name}</p>
+    <div className="bg-white p-3 border border-slate-200 rounded-md shadow-md">
+      <p className="font-medium text-sm mb-1">{data.name}</p>
       {chartView === "time" ? (
-        <p className="text-xs text-slate-600">{formatTime(data.value)}</p>
+        <div>
+          <p className="text-sm text-slate-600">Tempo gasto: {formatTime(data.value)}</p>
+        </div>
       ) : (
-        <p className="text-xs text-slate-600">{data.value} de {data.total} concluídas</p>
+        <div className="space-y-1">
+          <p className="text-sm text-green-600">✓ Concluídas: {data.value}</p>
+          <p className="text-sm text-orange-600">⏳ Pendentes: {data.total - data.value}</p>
+          <p className="text-sm text-slate-600">Total: {data.total}</p>
+        </div>
       )}
     </div>
   );
