@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,12 +62,24 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Custom Web3 Colors
+				'cyber-blue': '#A7C5EB',
+				'cyber-purple': '#817FEC',
+				'neon-green': '#00FFB3',
+				'deep-black': '#0D0D0D'
+			},
+			fontFamily: {
+				'space': ['Space Grotesk', 'Inter', 'sans-serif'],
+				'inter': ['Inter', 'sans-serif'],
+				'poppins': ['Poppins', 'sans-serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				sm: 'calc(var(--radius) - 4px)',
+				'2xl': '1rem',
+				'3xl': '1.5rem'
 			},
 			keyframes: {
 				'accordion-down': {
@@ -84,11 +97,23 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-glow': {
+					'0%, 100%': {
+						boxShadow: '0 0 5px #A7C5EB, 0 0 10px #A7C5EB'
+					},
+					'50%': {
+						boxShadow: '0 0 10px #A7C5EB, 0 0 20px #A7C5EB, 0 0 30px #A7C5EB'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
+			},
+			backdropBlur: {
+				'xs': '2px',
 			}
 		}
 	},

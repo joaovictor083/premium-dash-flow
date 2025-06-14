@@ -22,32 +22,32 @@ import {
 
 const menuItems = [
   {
-    title: "Visão Geral",
-    subtitle: "Dashboard principal",
+    title: "Dashboard",
+    subtitle: "Visão geral",
     url: "/",
     icon: LayoutDashboard,
   },
   {
-    title: "Tudo que você precisa fazer",
-    subtitle: "Suas tarefas organizadas",
+    title: "Tarefas",
+    subtitle: "Gestão de atividades",
     url: "/tarefas",
     icon: ListTodo,
   },
   {
-    title: "Seu progresso em tempo real",
-    subtitle: "Métricas e análises",
+    title: "Relatórios",
+    subtitle: "Analytics & métricas",
     url: "/relatorios",
     icon: ChartBar,
   },
   {
-    title: "Acesse rapidamente o que importa",
-    subtitle: "Itens favoritos",
+    title: "Favoritos",
+    subtitle: "Items salvos",
     url: "/favoritos",
     icon: Star,
   },
   {
-    title: "Tarefas descartadas",
-    subtitle: "Lixeira",
+    title: "Lixeira",
+    subtitle: "Items descartados",
     url: "/lixeira",
     icon: Trash2,
   },
@@ -55,10 +55,10 @@ const menuItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar className="bg-slate-800 border-r border-slate-600">
-      <SidebarHeader className="border-b border-slate-600 p-6">
+    <Sidebar className="glass-dark border-r border-cyber-blue/20">
+      <SidebarHeader className="border-b border-cyber-blue/20 p-6">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 flex items-center justify-center">
+          <div className="w-12 h-12 flex items-center justify-center rounded-2xl glass-card">
             <img 
               src="/lovable-uploads/8c7f8ce3-d763-41ed-b356-5adef553f0dc.png" 
               alt="Time Hower Logo" 
@@ -66,27 +66,27 @@ export function AppSidebar() {
             />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-white">Time Hower</h2>
-            <p className="text-sm text-slate-300">Matriz de Eisenhower</p>
+            <h2 className="text-lg font-bold text-white font-space text-glow">Time Hower</h2>
+            <p className="text-sm text-cyber-blue font-inter">Matriz de Eisenhower</p>
           </div>
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="p-4">
+      <SidebarContent className="p-4 custom-scrollbar">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-slate-300 text-xs uppercase tracking-wide font-medium mb-3 px-2">
+          <SidebarGroupLabel className="text-cyber-blue/70 text-xs uppercase tracking-wider font-medium mb-4 px-2 font-space">
             NAVEGAÇÃO PRINCIPAL
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="h-auto p-3 rounded-xl hover:bg-slate-700 transition-colors group data-[active=true]:bg-red-600 data-[active=true]:text-white">
-                    <a href={item.url} className="flex items-center gap-3">
-                      <item.icon className="w-5 h-5 text-slate-300 group-hover:text-red-400 group-data-[active=true]:text-white" />
+                  <SidebarMenuButton asChild className="h-auto p-4 rounded-2xl glass-card hover:neon-blue hover-scale transition-all duration-300 group data-[active=true]:gradient-primary data-[active=true]:neon-blue">
+                    <a href={item.url} className="flex items-center gap-4">
+                      <item.icon className="w-5 h-5 text-cyber-blue group-hover:text-white group-data-[active=true]:text-white transition-colors" />
                       <div className="flex flex-col text-left">
-                        <span className="text-white font-medium text-sm leading-tight">{item.title}</span>
-                        <span className="text-slate-400 text-xs leading-tight">{item.subtitle}</span>
+                        <span className="text-white font-medium text-sm leading-tight font-inter group-hover:text-glow">{item.title}</span>
+                        <span className="text-cyber-blue/70 text-xs leading-tight font-inter">{item.subtitle}</span>
                       </div>
                     </a>
                   </SidebarMenuButton>
@@ -97,14 +97,14 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-slate-600 p-4">
+      <SidebarFooter className="border-t border-cyber-blue/20 p-4">
         <SidebarMenuItem>
-          <SidebarMenuButton asChild className="h-auto p-3 rounded-xl hover:bg-slate-700 transition-colors group">
-            <a href="/configuracoes" className="flex items-center gap-3">
-              <Settings className="w-5 h-5 text-slate-300 group-hover:text-red-400" />
+          <SidebarMenuButton asChild className="h-auto p-4 rounded-2xl glass-card hover:neon-purple hover-scale transition-all duration-300 group">
+            <a href="/configuracoes" className="flex items-center gap-4">
+              <Settings className="w-5 h-5 text-cyber-purple group-hover:text-white transition-colors" />
               <div className="flex flex-col text-left">
-                <span className="text-white font-medium text-sm">Ajuste sua experiência</span>
-                <span className="text-slate-400 text-xs">Configurações</span>
+                <span className="text-white font-medium text-sm font-inter">Configurações</span>
+                <span className="text-cyber-purple/70 text-xs font-inter">Ajuste sua experiência</span>
               </div>
             </a>
           </SidebarMenuButton>
