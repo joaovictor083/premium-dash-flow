@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Search, Plus, Grid3x3, List } from "lucide-react"
 import { useState } from "react"
 
@@ -11,16 +12,20 @@ interface DashboardHeaderProps {
 }
 
 export const DashboardHeader = ({ onNewTask, viewMode, onViewModeChange }: DashboardHeaderProps) => {
-  const [userName] = useState("João"); // Em um app real, viria do contexto de usuário
+  const [userName] = useState("João");
 
   return (
     <div className="bg-white border-b border-slate-200 p-6">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-1">
-            Boas-vindas, {userName}! 
-          </h1>
-          <p className="text-slate-600">Que tal transformar seu tempo em resultado hoje?</p>
+        <div className="flex items-center gap-4">
+          {/* Trigger para abrir sidebar no mobile */}
+          <SidebarTrigger className="md:hidden" />
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 mb-1">
+              Boas-vindas, {userName}! 
+            </h1>
+            <p className="text-slate-600">Que tal transformar seu tempo em resultado hoje?</p>
+          </div>
         </div>
 
         <div className="flex items-center gap-4">
@@ -59,7 +64,8 @@ export const DashboardHeader = ({ onNewTask, viewMode, onViewModeChange }: Dashb
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Adicionar Tarefa
+            <span className="hidden sm:inline">Adicionar Tarefa</span>
+            <span className="sm:hidden">Nova</span>
           </Button>
         </div>
       </div>
