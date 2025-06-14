@@ -55,14 +55,18 @@ const menuItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar className="bg-slate-900 border-r border-slate-700">
-      <SidebarHeader className="border-b border-slate-700 p-6">
+    <Sidebar className="bg-slate-800 border-r border-slate-600">
+      <SidebarHeader className="border-b border-slate-600 p-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-            <LayoutDashboard className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 flex items-center justify-center">
+            <img 
+              src="/lovable-uploads/8c7f8ce3-d763-41ed-b356-5adef553f0dc.png" 
+              alt="Time Hower Logo" 
+              className="w-10 h-10 object-contain"
+            />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-white">ProductiTime</h2>
+            <h2 className="text-lg font-semibold text-white">Time Hower</h2>
             <p className="text-sm text-slate-300">Matriz de Eisenhower</p>
           </div>
         </div>
@@ -77,9 +81,9 @@ export function AppSidebar() {
             <SidebarMenu className="space-y-2">
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="h-auto p-3 rounded-xl hover:bg-slate-800 transition-colors group data-[active=true]:bg-blue-600 data-[active=true]:text-white">
+                  <SidebarMenuButton asChild className="h-auto p-3 rounded-xl hover:bg-slate-700 transition-colors group data-[active=true]:bg-red-600 data-[active=true]:text-white">
                     <a href={item.url} className="flex items-center gap-3">
-                      <item.icon className="w-5 h-5 text-slate-300 group-hover:text-blue-400 group-data-[active=true]:text-white" />
+                      <item.icon className="w-5 h-5 text-slate-300 group-hover:text-red-400 group-data-[active=true]:text-white" />
                       <div className="flex flex-col text-left">
                         <span className="text-white font-medium text-sm leading-tight">{item.title}</span>
                         <span className="text-slate-400 text-xs leading-tight">{item.subtitle}</span>
@@ -93,11 +97,11 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-slate-700 p-4">
+      <SidebarFooter className="border-t border-slate-600 p-4">
         <SidebarMenuItem>
-          <SidebarMenuButton asChild className="h-auto p-3 rounded-xl hover:bg-slate-800 transition-colors group">
+          <SidebarMenuButton asChild className="h-auto p-3 rounded-xl hover:bg-slate-700 transition-colors group">
             <a href="/configuracoes" className="flex items-center gap-3">
-              <Settings className="w-5 h-5 text-slate-300 group-hover:text-blue-400" />
+              <Settings className="w-5 h-5 text-slate-300 group-hover:text-red-400" />
               <div className="flex flex-col text-left">
                 <span className="text-white font-medium text-sm">Ajuste sua experiência</span>
                 <span className="text-slate-400 text-xs">Configurações</span>

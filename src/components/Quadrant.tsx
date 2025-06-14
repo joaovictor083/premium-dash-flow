@@ -1,146 +1,152 @@
-
 import { useState } from "react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { TaskItem } from "./TaskItem";
-import { TaskForm } from "./TaskForm";
-import { Plus } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Task } from "@/components/Task";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 
-type Task = {
-  id: string;
-  title: string;
-  status: "pending" | "in_progress" | "completed";
-  timeEstimated: number;
-  timeSpent: number;
-  createdAt: Date;
-};
-
-interface QuadrantProps {
+interface TaskType {
   id: string;
   title: string;
   description: string;
-  color: string;
-  bgColor: string;
-  action: string;
-  tasks: Task[];
-  onAddTask: (task: Task) => void;
-  onUpdateTask: (taskId: string, updatedTask: Partial<Task>) => void;
-  onDeleteTask: (taskId: string) => void;
+  timeSpent: number;
+  completed: boolean;
 }
 
-export const Quadrant = ({
-  id,
-  title,
-  description,
-  color,
-  bgColor,
-  action,
-  tasks,
-  onAddTask,
-  onUpdateTask,
-  onDeleteTask
-}: QuadrantProps) => {
-  const [showForm, setShowForm] = useState(false);
+export type QuadrantType = "urgent_important" | "not_urgent_important" | "urgent_not_important" | "not_urgent_not_important";
 
-  const handleSubmit = (taskData: Omit<Task, "id" | "createdAt">) => {
-    const newTask: Task = {
-      ...taskData,
-      id: Date.now().toString(),
-      createdAt: new Date(),
-    };
-    onAddTask(newTask);
-    setShowForm(false);
+interface QuadrantProps {
+  type: QuadrantType;
+  tasks: TaskType[];
+  onTaskUpdate: (type: QuadrantType, taskId: string, updatedTask: Partial<TaskType>) => void;
+  onTaskDelete: (type: QuadrantType, taskId: string) => void;
+}
+
+export const Quadrant = ({ type, tasks, onTaskUpdate, onTaskDelete }: QuadrantProps) => {
+  const [isAddingTask, setIsAddingTask] = useState(false);
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [newTaskDescription, setNewTaskDescription] = useState("");
+
+  const handleTaskUpdate = (taskId: string, updatedTask: Partial<TaskType>) => {
+    onTaskUpdate(type, taskId, updatedTask);
   };
 
-  // Mapeamento das cores específicas por quadrante
-  const quadrantStyles = {
-    urgent_important: {
-      bg: "bg-red-50",
-      border: "border-red-200",
-      text: "text-red-700",
-      button: "bg-red-600 hover:bg-red-700",
-      badge: "bg-red-100 text-red-700 border-red-200"
-    },
-    not_urgent_important: {
-      bg: "bg-blue-50", 
-      border: "border-blue-200",
-      text: "text-blue-700",
-      button: "bg-blue-600 hover:bg-blue-700",
-      badge: "bg-blue-100 text-blue-700 border-blue-200"
-    },
-    urgent_not_important: {
-      bg: "bg-yellow-50",
-      border: "border-yellow-200", 
-      text: "text-yellow-700",
-      button: "bg-yellow-600 hover:bg-yellow-700",
-      badge: "bg-yellow-100 text-yellow-700 border-yellow-200"
-    },
-    not_urgent_not_important: {
-      bg: "bg-green-50",
-      border: "border-green-200",
-      text: "text-green-700", 
-      button: "bg-green-600 hover:bg-green-700",
-      badge: "bg-green-100 text-green-700 border-green-200"
+  const handleTaskDelete = (taskId: string) => {
+    onTaskDelete(type, taskId);
+  };
+
+  const handleAddTask = () => {
+    setIsAddingTask(true);
+  };
+
+  const handleSaveTask = () => {
+    // Aqui você adicionaria a lógica para salvar a nova tarefa
+    // (e.g., chamar uma função para atualizar o estado das tarefas)
+    console.log("Salvando nova tarefa:", newTaskTitle, newTaskDescription);
+    setIsAddingTask(false);
+    setNewTaskTitle("");
+    setNewTaskDescription("");
+  };
+
+  const handleCancelAddTask = () => {
+    setIsAddingTask(false);
+    setNewTaskTitle("");
+    setNewTaskDescription("");
+  };
+
+  const getQuadrantConfig = (type: QuadrantType) => {
+    switch (type) {
+      case "urgent_important":
+        return {
+          title: "Fazer Agora",
+          subtitle: "Urgente e Importante",
+          color: "bg-red-50 border-red-200",
+          headerColor: "bg-red-600",
+          textColor: "text-red-800",
+          buttonColor: "bg-red-600 hover:bg-red-700"
+        };
+      case "not_urgent_important":
+        return {
+          title: "Agendar",
+          subtitle: "Importante, Não Urgente",
+          color: "bg-amber-50 border-amber-200",
+          headerColor: "bg-amber-600",
+          textColor: "text-amber-800",
+          buttonColor: "bg-amber-600 hover:bg-amber-700"
+        };
+      case "urgent_not_important":
+        return {
+          title: "Delegar",
+          subtitle: "Urgente, Não Importante",
+          color: "bg-slate-50 border-slate-200",
+          headerColor: "bg-slate-600",
+          textColor: "text-slate-800",
+          buttonColor: "bg-slate-600 hover:bg-slate-700"
+        };
+      case "not_urgent_not_important":
+        return {
+          title: "Eliminar",
+          subtitle: "Não Urgente, Não Importante",
+          color: "bg-green-50 border-green-200",
+          headerColor: "bg-green-600",
+          textColor: "text-green-800",
+          buttonColor: "bg-green-600 hover:bg-green-700"
+        };
     }
   };
 
-  const styles = quadrantStyles[id] || quadrantStyles.urgent_important;
+  const { title, subtitle, color, headerColor, textColor, buttonColor } = getQuadrantConfig(type);
 
   return (
-    <Card className={`${styles.bg} ${styles.border} border-2 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden`}>
-      <CardHeader className="pb-3">
-        <div className="flex flex-wrap justify-between items-start gap-3">
-          <div className="flex-1">
-            <h3 className={`text-lg font-bold ${styles.text} mb-1`}>{title}</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">{description}</p>
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${styles.badge} border`}>
-              {action}
-            </span>
-            <span className="text-xs text-slate-500 bg-white px-2 py-1 rounded-full">
-              {tasks.length} {tasks.length === 1 ? 'tarefa' : 'tarefas'}
-            </span>
-          </div>
+    <Card className={`overflow-hidden border-0 shadow-md rounded-2xl ${color}`}>
+      <div className={`px-6 py-4 ${headerColor} ${textColor} flex items-center justify-between`}>
+        <div>
+          <h2 className="text-xl font-bold">{title}</h2>
+          <p className="text-sm">{subtitle}</p>
         </div>
-      </CardHeader>
+        <button onClick={handleAddTask} className={`rounded-full p-2 ${buttonColor} text-white hover:scale-110 transition-transform`}>
+          <Plus className="h-5 w-5" />
+        </button>
+      </div>
 
-      <CardContent className="pt-2">
-        <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1 custom-scrollbar">
-          {tasks.map((task) => (
-            <TaskItem
+      <div className="p-6 space-y-4">
+        {tasks.length > 0 ? (
+          tasks.map((task) => (
+            <Task
               key={task.id}
               task={task}
-              onUpdate={(updatedTask) => onUpdateTask(task.id, updatedTask)}
-              onDelete={() => onDeleteTask(task.id)}
-              color={styles.text}
+              onTaskUpdate={(updatedTask) => handleTaskUpdate(task.id, updatedTask)}
+              onTaskDelete={() => handleTaskDelete(task.id)}
             />
-          ))}
+          ))
+        ) : (
+          <p className="text-slate-500">Nenhuma tarefa aqui.</p>
+        )}
+      </div>
 
-          {tasks.length === 0 && !showForm && (
-            <div className="text-center py-8 text-slate-400">
-              <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Plus className="w-6 h-6" />
-              </div>
-              <p className="text-sm font-medium">Nenhuma tarefa adicionada</p>
-              <p className="text-xs">Clique abaixo para começar</p>
-            </div>
-          )}
-
-          {showForm ? (
-            <TaskForm onSubmit={handleSubmit} onCancel={() => setShowForm(false)} />
-          ) : (
-            <Button 
-              variant="outline" 
-              className={`w-full mt-4 border-dashed border-2 h-12 text-sm font-medium transition-all duration-200 hover:scale-[1.02] ${styles.border} hover:${styles.bg}`}
-              onClick={() => setShowForm(true)}
-            >
-              <Plus size={16} className="mr-2" />
-              + Adicionar Tarefa
-            </Button>
-          )}
+      {isAddingTask && (
+        <div className="p-6">
+          <input
+            type="text"
+            placeholder="Título da tarefa"
+            className="w-full p-2 border rounded-md mb-2"
+            value={newTaskTitle}
+            onChange={(e) => setNewTaskTitle(e.target.value)}
+          />
+          <textarea
+            placeholder="Descrição da tarefa"
+            className="w-full p-2 border rounded-md mb-4"
+            value={newTaskDescription}
+            onChange={(e) => setNewTaskDescription(e.target.value)}
+          />
+          <div className="flex justify-end gap-2">
+            <button onClick={handleCancelAddTask} className="px-4 py-2 rounded-md text-slate-600 hover:bg-slate-100">
+              Cancelar
+            </button>
+            <button onClick={handleSaveTask} className={`px-4 py-2 rounded-md text-white ${buttonColor}`}>
+              Salvar
+            </button>
+          </div>
         </div>
-      </CardContent>
+      )}
     </Card>
   );
 };
