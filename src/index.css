@@ -91,18 +91,23 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', 'Poppins', 'Nunito', system-ui, sans-serif;
   }
 }
 
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(20px);
     }
     to {
       opacity: 1;
@@ -110,12 +115,51 @@
     }
   }
   
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
   .hover-scale {
-    transition: transform 0.2s ease;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .hover-scale:hover {
     transform: scale(1.02);
+  }
+
+  /* Scrollbar customizada */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+  }
+
+  /* Microanimações para cards */
+  .task-card {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -128,3 +172,6 @@
     gap: 0.5rem;
   }
 }
+
+/* Tipografia moderna */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
